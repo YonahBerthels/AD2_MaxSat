@@ -5,7 +5,6 @@
           (scheme inexact)
           (scheme write)
           (a-d sat cnf)
-          (a-d sat interpretation) ;; ADDED - library with 
           (a-d graph labeled config)
           (a-d graph-traversing dft-labeled)
           (a-d scheme-tools))
@@ -19,18 +18,7 @@
     ; - '() (= undefined) if hard(formula) is not false but formula is undefined under the interpretation
     ; - the sum of all weights of unsatisfied soft clauses of the formula otherwise
     (define (cost form interpret)
-      (let ((hards (hard form))
-            (softs (soft form)))
-        (cond
-          ((exists (lambda (c) (eq? (clause-value c interpret) false)) hards) +inf.0)
-          ((or (exists (lambda (c) (eq? (clause-value c interpret) unknown)) hards)
-               (exists (lambda (c) (eq? (clause-value c interpret) unknown)) softs)) '())
-          (else (fold-left (lambda (acc c)
-                             (if (eq? (clause-value c interpret) false)
-                                 (+ acc (clause-weight c))
-                                 acc))
-                           0
-                           softs)))))
+      (error "cost -- Procedure not yet implemented") cost)
 
 
 
@@ -40,22 +28,9 @@
     
     ;Applies the Blocking Variable Transform to the formula, destructively changing it.
     (define (blocking-variable-transform! form)
-      (let ((original-softs (soft form))
-            (next-var (+ (number-of-vars form) 1)))
-        (soft! from '())
-        (number-of-clauses! form  (- (number-of-clauses form) (length original-softs)))
-        (for-each
-         (lambda (cls)
-           (let* ((b (make-literal next-var #f)) ;; positive b_i
-                  (not-b (make-literal next-var #t)) ;; negative b_i
-                  (w (clause-weight cls))
-                  (new-hard (make-clause cons b (literals cls)) (+ (clause-size cls) 1) #f)
-                  (new-soft (make-clause (list not-b) 1 w)))
-             (add-clause-in-form! form new-hard)
-             (add-clause-in-form! form new-soft)
-             (set! next-var (+ next-var 1))))
-         original-softs)
-        (number-of-vars! from (- next-var 1))))
+      (error "blocking-variable-transform! -- Procedure not yet implemented" blocking-variable-transform!))
+
+    
         
     
     ;pseudo-boolean-layer (formula number -> formula)

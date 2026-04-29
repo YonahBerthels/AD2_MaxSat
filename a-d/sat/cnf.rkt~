@@ -16,7 +16,7 @@
 (define-library (cnf)
   (export make-literal literal? variable negation? same-literal? same-var? negate
           make-clause clause? empty-clause? literals clause-size clause-weight add-clause-in-form!
-          make-formula formula? soft hard number-of-vars number-of-clauses number-of-vars clauses number-of-vars!
+          make-formula formula? soft hard number-of-vars number-of-clauses number-of-vars
           literal->string clause->string formula->string)
   (import (scheme base))
   (begin
@@ -80,29 +80,24 @@
     (define-record-type formula
       (make-formula hc sc nv nc)
       formula?
-      (hc hard hard!) ;; ADDED - hard clauses
-      (sc soft soft!) ;; ADDED - soft-clauses
-      (nv number-of-vars number-of-vars!) ;; ADDED - number-of-cars
+      (hc hard hard-clauses!) ;; ADDED - hard clauses
+      (sc soft soft-clauses!) ;; ADDED - soft-clauses
+      (nv number-of-vars)
       (nc number-of-clauses number-of-clauses!))
-
-    (define (clauses f)
-      (append (hard f) (soft f)))
 
     (define (formula->string f)
       (let loop
-        ((cls (append (hard f) (soft f)))) ;; CHANGED - implemented hard and soft clauses
+        ((cls (clauses f)))
         (if (null? (cdr cls))
             (clause->string (car cls))
             (string-append (clause->string (car cls))
                            " AND\n "
                            (loop (cdr cls))))))
 
-    ;; CHANGED - implemented hard and soft clauses
     (define (add-clause-in-form! f cls)
-      (if (clause-weight cls)
-          (soft! f (cons cls (soft f)))
-          (hard! f (cons cls (hard f))))
+      (clauses! f (cons cls (clauses f)))
       (number-of-clauses! f (+ (number-of-clauses f) 1)))
+
     
 
     ))

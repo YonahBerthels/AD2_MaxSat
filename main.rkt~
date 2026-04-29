@@ -16,4 +16,4 @@
 (define form6 (parse-dimacs-file "a-d/sat/examples/example6.wcnf"))
 
 ;Pas hieronder je code toe op enkele voorbeelden
-(lsu! dpll form2)
+;(lsu! dpll form2)
